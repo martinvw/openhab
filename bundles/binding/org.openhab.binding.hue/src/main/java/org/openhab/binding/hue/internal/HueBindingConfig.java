@@ -55,7 +55,9 @@ public class HueBindingConfig implements BindingConfig {
         switching,
         brightness,
         colorTemperature,
-        rgb
+        rgb,
+        colorloop,
+        blink
     }
 
     /**

@@ -11,6 +11,7 @@ package org.openhab.binding.hue.internal;
 import java.io.IOException;
 import java.util.Dictionary;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Set;
 
 import org.apache.commons.lang.StringUtils;
@@ -58,13 +59,7 @@ public class HueBinding extends AbstractActiveBinding<HueBindingProvider>impleme
     // Caches all bulbs controlled to prevent the recreation of the bulbs which
     // triggers a rereading of the settings from the bridge which is very
     // expensive.
-    private HashMap<String, HueBulb> bulbCache = new HashMap<String, HueBulb>();
-
-    /**
-     * Default constructor for the Hue binding.
-     */
-    public HueBinding() {
-    }
+    private Map<String, HueBulb> bulbCache = new HashMap<String, HueBulb>();
 
     /**
      * @{inheritDoc}
@@ -213,6 +208,7 @@ public class HueBinding extends AbstractActiveBinding<HueBindingProvider>impleme
         HueBindingConfig deviceConfig = getConfigForItemName(itemName);
 
         if (deviceConfig == null) {
+            logger.debug("No valid device config is available for item: " + itemName);
             return;
         }
 
@@ -223,7 +219,15 @@ public class HueBinding extends AbstractActiveBinding<HueBindingProvider>impleme
         }
 
         if (command instanceof OnOffType) {
-            bulb.switchOn(OnOffType.ON.equals(command));
+            boolean on = OnOffType.ON == command;
+            if (deviceConfig.getType() == BindingType.colorloop) {
+                bulb.setColorLoop(on);
+            } else if (deviceConfig.getType() == BindingType.blink) {
+                bulb.doBlink();
+                eventPublisher.postUpdate(itemName, OnOffType.OFF);
+            } else {
+                bulb.switchOn(on);
+            }
         }
 
         if (command instanceof HSBType) {
@@ -257,7 +261,6 @@ public class HueBinding extends AbstractActiveBinding<HueBindingProvider>impleme
                         (int) Math.round((((double) 346 / (double) 100) * ((PercentType) command).intValue()) + 154));
             }
         }
-
     }
 
     /**

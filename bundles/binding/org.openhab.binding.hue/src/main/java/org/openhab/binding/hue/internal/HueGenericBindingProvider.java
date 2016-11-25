@@ -93,8 +93,8 @@ public class HueGenericBindingProvider extends AbstractGenericBindingProvider im
                             configParts.length < 3 ? null : configParts[2]);
                     addBindingConfig(item, hueBindingConfig);
                 } else if (item instanceof SwitchItem) {
-                    BindingConfig hueBindingConfig = new HueBindingConfig(configParts[0], BindingType.switching.name(),
-                            null);
+                    String type = configParts.length < 2 ? BindingType.switching.name() : configParts[1];
+                    BindingConfig hueBindingConfig = new HueBindingConfig(configParts[0], type,null);
                     addBindingConfig(item, hueBindingConfig);
                 }
 

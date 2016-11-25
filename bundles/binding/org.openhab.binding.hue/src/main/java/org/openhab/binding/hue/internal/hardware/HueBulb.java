@@ -28,7 +28,6 @@ import com.sun.jersey.api.client.WebResource;
  *
  */
 public class HueBulb {
-
     static final Logger logger = LoggerFactory.getLogger(HueBulb.class);
 
     /**
@@ -69,7 +68,7 @@ public class HueBulb {
      * 
      * @param connectedBridge
      *            The bridge the bulb is connected to.
-     * @param deviceNumber
+     * @param deviceId
      *            The number under which the bulb is filed in the bridge.
      */
     public HueBulb(HueBridge connectedBridge, String deviceId, HueSettings settings) {
@@ -85,7 +84,7 @@ public class HueBulb {
     /**
      * Update the internal bulb status according to the Philips hub
      * 
-     * @param HueSettings retrieved from hub
+     * @param settings retrieved from hub
      */
     public void getStatus(HueSettings settings) {
         if (settings.isValidId(deviceId)) {
@@ -170,18 +169,16 @@ public class HueBulb {
         }
 
         return (int) Math.round((100.0 / MAX_BRIGHTNESS) * this.brightness);
-
     }
 
     /**
      * Set bulb ON/OFF without changing the brightness.
      * Takes care in case of an Osram Par 16 50 TW bulb. Some workaround message will be send to bridge
      * 
-     * @param on
+     * @param powerOn
      *            true turn bulb on
      *            false turn bulb off
      */
-
     public boolean switchOn(boolean powerOn) {
         this.isOn = powerOn;
         if (powerOn) {
@@ -198,6 +195,32 @@ public class HueBulb {
             }
         }
         return true;
+    }
+
+    /**
+     * Puts the lights in a color looping mode until it is stopped
+     *
+     * @param on
+     *            true start color looping
+     *            false stop color looping
+     */
+    public void setColorLoop(boolean on) {
+        if (on) {
+            // the color loop requires the light to be turned on
+            if (!isOn) {
+                switchOn(true);
+            }
+            executeMessage("{\"effect\":\"colorloop\"}");
+        } else {
+            executeMessage("{\"effect\":\"none\"}");
+        }
+    }
+
+    /**
+     * Makes the light blink once
+     */
+    public void doBlink() {
+        executeMessage("{\"alert\":\"select\"}");
     }
 
     /**
