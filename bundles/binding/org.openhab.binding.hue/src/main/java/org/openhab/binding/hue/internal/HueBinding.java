@@ -130,6 +130,9 @@ public class HueBinding extends AbstractActiveBinding<HueBindingProvider>impleme
                             if ((bulb.getIsOn() == true) && (bulb.getIsReachable() == true)) {
                                 if ((deviceConfig.itemStateOnOffType == null)
                                         || (deviceConfig.itemStateOnOffType.equals(OnOffType.ON) == false)) {
+
+                                    // TODO a distinction should be made here!!!!
+                                    // TODO Can we receive the colorloop state of the bridge
                                     eventPublisher.postUpdate(hueItemName, OnOffType.ON);
                                     deviceConfig.itemStateOnOffType = OnOffType.ON;
                                 }
@@ -155,6 +158,7 @@ public class HueBinding extends AbstractActiveBinding<HueBindingProvider>impleme
                                 }
                             } else if (deviceConfig.getType().equals(BindingType.rgb)) {
                                 if ((bulb.getIsOn() == true) && (bulb.getIsReachable() == true)) {
+                                    // TODO if the light is colorlooping we should not update the rgb value
                                     // Only postUpdate when bulb is on, otherwise color item is not retaining state and
                                     // shows to max brightness value
                                     DecimalType decimalHue = new DecimalType(bulb.getHue() / (double) 182);
