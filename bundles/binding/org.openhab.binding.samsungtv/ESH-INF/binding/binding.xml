@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<binding:binding id="wol"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns:binding="http://eclipse.org/smarthome/schemas/binding/v1.0.0"
+        xsi:schemaLocation="http://eclipse.org/smarthome/schemas/binding/v1.0.0 http://eclipse.org/smarthome/schemas/binding-1.0.0.xsd">
+
+    <name>Samsung TV Binding (1.x)</name>
+	<description>This is the binding for Samsung TV. Binding should be compatible with TV models which support Apple and Android remote applications.</description>
+	<author>Pauli Anttila</author>
+
+</binding:binding>
